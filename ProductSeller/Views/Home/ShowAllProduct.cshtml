@@ -1,0 +1,84 @@
+﻿@model IEnumerable<ProductSeller.Models.Product>
+
+@{
+    ViewData["Title"] = "ShowAllProduct";
+    List<string> imageExtensions = new List<string>()
+    {
+        ".jpg", ".png", ".webp", ".gif", ".pdf", ".tiff", ".jpeg"
+    };
+}
+
+<h1>ShowAllProduct</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>           
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AvailableQuantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Supplier)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>           
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AvailableQuantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Supplier)
+            </td>
+                <td>
+                    @{
+                        var extension = System.IO.Path.GetExtension(item.Description);
+                    }
+                    @if (imageExtensions.Contains(extension))
+                    {
+                        <img src="~/images/@item.Description" height="100px">
+                    }
+                    else
+                    {
+                        <img src="~/images/default.png" height="100px">
+                    }
+
+                </td>
+            <td>
+                    @Html.ActionLink("Edit", "Edit", new { id=item.Id}) |
+                    @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id=item.Id}) |
+                    <form method="post" action="@Url.Action("CallBack", "Home")">
+                        <input type="hidden" name="id" value="@item.Id">
+                        <button type="submit" name="action" value="CallBack">RollBack</button>
+                    </form>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
